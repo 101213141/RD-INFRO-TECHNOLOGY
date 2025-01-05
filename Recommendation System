@@ -1,0 +1,53 @@
+def chatbot():
+    print("Krisa: Hi! I am Krisa, your personal chatbot. How can I help you today?")
+
+    recommendations = {
+        "books": ["Harry Potter", "Percy Jackson", "Hunger Games", "Sherlock Holmes ", "Moby Dick"],
+        "movies": ["Inception", "The Matrix", "Interstellar", "The Shawshank Redemption", "The Godfather"],
+        "dramas": ["Goblin", "Twinkling watermelon", "Kill me, Heal me", "Doctors", "extraordinary you"],
+        "products": ["Wireless Headphones", "Smartwatch", "Bluetooth Speaker", "Fitness Tracker", "E-Reader"]
+    }
+
+    while True:
+        try:
+            user_input = input("You: ").strip().lower()
+
+            if user_input in ["exit", "quit", "bye"]:
+                print("Krisa: Goodbye! Have a great day!")
+                break
+
+            elif "hello" in user_input or "hi" in user_input:
+                print("Krisa: Hello! How can I assist you today?")
+            elif "how are you" in user_input:
+                print("Krisa: I am feeling wonderful. How about you?")
+            elif "your name" in user_input:
+                print("Krisa: My name is Krisa, is there anything i can help you with?")
+            elif "time" in user_input:
+                from datetime import datetime
+                now = datetime.now()
+                print(f"Krisa: The current time is {now.strftime('%H:%M:%S')}.")
+            elif "date" in user_input:
+                from datetime import date
+                today = date.today()
+                print(f"Krisa: Today's date is {today.strftime('%B %d, %Y')}.")
+            elif "weather" in user_input:
+                print("Krisa: I'm unable to fetch real-time weather updates right now, but you can check in a weather app!")
+            elif "bored" in user_input:
+                print("Krisa: Here are some suggestions to beat boredom:\n1. Read a book or watch a movie.\n2. Go to a park or exercise.\n3. Learn a new skill or hobby, like cooking or crocheting.\n4. Listen to your favorite music or a podcast.\n5. Call or message a friend to catch up on.")
+            elif "recommend" in user_input:
+                if "book" in user_input:
+                    print(f"Krisa: I recommend you check out these books: {', '.join(recommendations['books'])}.")
+                elif "movie" in user_input:
+                    print(f"Krisa: Here are some great movies to watch: {', '.join(recommendations['movies'])}.")
+                elif "product" in user_input:
+                    print(f"Krisa: These products might interest you: {', '.join(recommendations['products'])}.")
+                else:
+                    print("Krisa: I can recommend books, movies, or products. Please specify which one you'd like suggestions for!")
+                 
+            else:
+                print("Krisa: I'm sorry, I am unable to understand that. Can you try rephrasing it?")
+        except Exception as e:
+            print(f"Krisa: Oops! Something went wrong. Error: {e}")
+
+if __name__ == "__main__":
+    chatbot()
