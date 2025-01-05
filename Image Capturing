@@ -1,0 +1,40 @@
+import tensorflow as tf
+from tensorflow.keras.applications import InceptionV3
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.applications.inception_v3 import preprocess_input
+import numpy as np
+
+def load_feature_extractor():
+    base_model = InceptionV3(weights='imagenet')
+    model = tf.keras.Model(base_model.input, base_model.layers[-2].output)
+    return model
+
+def preprocess_image(image_path):
+    img = load_img(image_path, target_size=(299, 299))
+    img_array = img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = preprocess_input(img_array)
+    return img_array
+
+def extract_features(image_path, model):
+    img_array = preprocess_image(image_path)
+    features = model.predict(img_array)
+    return features
+
+def generate_caption(features):
+    # Placeholder for real captioning model
+    return "A placeholder caption for the input image."
+
+def image_captioning_pipeline(image_path):
+    print("Loading feature extractor...")
+    feature_extractor = load_feature_extractor()
+    print("Extracting features from image...")
+    features = extract_features(image_path, feature_extractor)
+    print("Generating caption...")
+    caption = generate_caption(features)
+    return caption
+
+if __name__ == "__main__":
+    image_path = "path/to/your/image.jpg"  
+    caption = image_captioning_pipeline(image_path)
+    print(f"Generated Caption: {caption}")
