@@ -1,0 +1,65 @@
+import cv2
+import numpy as np
+import os
+from sklearn.metrics.pairwise import cosine_similarity
+
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+known_faces = {
+    "person_1": np.random.rand(128),
+    "person_2": np.random.rand(128)
+}
+
+def extract_face(image, model=face_cascade):
+    """Detects faces in the image."""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = model.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    return faces
+
+def recognize_face(face_embedding, known_faces):
+    """Recognizes a face using cosine similarity."""
+    best_match = None
+    best_score = 0.0
+    for name, embedding in known_faces.items():
+        score = cosine_similarity([face_embedding], [embedding])[0][0]
+        if score > best_score:
+            best_match = name
+            best_score = score
+    return best_match if best_score > 0.5 else "Unknown"
+
+def generate_face_embedding(face_region):
+    """Placeholder for face embedding extraction (e.g., using FaceNet)."""
+    # Normally, you would process the face_region using a pre-trained deep learning model
+    return np.random.rand(128)  # Simulated embedding for example
+
+def process_frame(frame):
+    """Detects and recognizes faces in a single frame."""
+    faces = extract_face(frame)
+    for (x, y, w, h) in faces:
+        face_region = frame[y:y+h, x:x+w]
+        embedding = generate_face_embedding(face_region)
+        name = recognize_face(embedding, known_faces)
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        cv2.putText(frame, name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
+    return frame
+
+def face_recognition_app(video_source=0):
+    """Runs the face detection and recognition application."""
+    cap = cv2.VideoCapture(video_source)
+    print("Press 'q' to exit the application.")
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+        processed_frame = process_frame(frame)
+        cv2.imshow("Face Recognition", processed_frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    face_recognition_app()
